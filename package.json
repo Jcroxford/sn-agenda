@@ -1,0 +1,34 @@
+{
+  "name": "sn-agenda",
+  "version": "1.0.0",
+  "description": "agenda slack app for use in simple nexus slack channel",
+  "main": "src/app.js",
+  "scripts": {
+    "start": "npm run build && node dist/app",
+    "dev": "nodemon --exec ts-node src/app.ts",
+    "build": "tsc",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Jcroxford/sn-agenda.git"
+  },
+  "author": "Jesse",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Jcroxford/sn-agenda/issues"
+  },
+  "homepage": "https://github.com/Jcroxford/sn-agenda#readme",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "dotenv": "^6.2.0",
+    "express": "^4.16.4"
+  },
+  "devDependencies": {
+    "@types/express": "^4.16.0",
+    "nodemon": "^1.18.9",
+    "ts-node": "^7.0.1",
+    "tslint": "^5.11.0",
+    "typescript": "^3.2.2"
+  }
+}

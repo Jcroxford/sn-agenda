@@ -5,11 +5,24 @@ import logger from 'morgan'
 import bodyParser from 'body-parser'
 import fs from 'fs'
 
+import * as slackApi from './snagenda.bot'
+
+import { SlackResponse } from './types/slackRequest'
+
 const app = express()
 
 app.use(bodyParser.urlencoded({ extended: false }))
+app.use(bodyParser.json())
 
 if (process.env.NODE_ENV === 'development') app.use(logger('dev'))
+
+app.post('/', (req, res) => {
+  const { body }: { body: SlackResponse } = req
+
+  slackApi.sayHi(body)
+
+  res.sendStatus(200)
+})
 
 app.post('/sn-agenda', (req, res) => {
   fs.writeFileSync('res.json', JSON.stringify(req.body, null, 2))

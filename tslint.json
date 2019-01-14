@@ -11,7 +11,8 @@
     "no-var-requires": false,
     "quotemark": [true, "single"],
     "semicolon": [true, "never"],
-    "curly": [true, "ignore-same-line"]
+    "curly": [true, "ignore-same-line"],
+    "trailing-comma": false
   },
   "rulesDirectory": []
 }

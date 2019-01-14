@@ -5,6 +5,9 @@ import logger from 'morgan'
 import bodyParser from 'body-parser'
 import fs from 'fs'
 
+import knex from './db/knex'
+knex.raw('select 1+1 as result').then(console.log).catch(console.log)
+
 import * as slackApi from './snagenda.bot'
 
 import { SlackResponse } from './types/slackRequest'

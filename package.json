@@ -7,6 +7,7 @@
     "start": "npm run build && node dist/app",
     "dev": "nodemon --exec ts-node src/app.ts",
     "build": "tsc",
+    "knex": "knex",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

@@ -22,7 +22,7 @@ if (process.env.NODE_ENV === 'development') app.use(logger('dev'))
 app.post('/', (req, res) => {
   const { body }: { body: SlackResponse } = req
 
-  slackApi.sayHi(body)
+  slackApi.handleAgendaBot(body)
 
   res.sendStatus(200)
 })

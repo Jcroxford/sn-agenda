@@ -14,7 +14,7 @@ export function handleAgendaBot(payload: SlackResponse) {
 function handleAddAgendaItem(payload: SlackResponse) {
   const { user, channel, text } = payload.event
 
-  const agendaItem = text.split('add-item')[0].trim()
+  const agendaItem = text.split('add-item')[1].trim()
 
   Promise.all([
     slack.users.info(user),
@@ -33,5 +33,8 @@ function handleAddAgendaItem(payload: SlackResponse) {
     })
     .then(([ success ]) => {
       if (!success) throw new Error('unable to add item to database')
+
+      const message = `ok! Added the todo item \`${agendaItem}\` to this group's todo list.`
+      slack.chat.postMessage(message, channel)
     })
 }

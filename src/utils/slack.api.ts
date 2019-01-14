@@ -34,5 +34,10 @@ export default {
           params: { channel, token: process.env.SLACK_API_TOKEN }
         })
     }
+  },
+  chat: {
+    postMessage(text: string, channel: string) {
+      return http().post('/chat.postMessage', { text, channel })
+    }
   }
 }

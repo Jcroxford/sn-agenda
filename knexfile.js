@@ -8,6 +8,7 @@ module.exports = {
     migrations: {
       directory: `${__dirname}/src/db/migrations`,
     },
+    useNullAsDefault: true
   },
 
   staging: {

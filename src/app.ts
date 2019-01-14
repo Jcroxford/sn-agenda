@@ -6,7 +6,6 @@ import bodyParser from 'body-parser'
 import fs from 'fs'
 
 import knex from './db/knex'
-knex.raw('select 1+1 as result').then(console.log).catch(console.log)
 
 import * as slackApi from './snagenda.bot'
 
@@ -32,4 +31,10 @@ app.post('/sn-agenda', (req, res) => {
   res.send('its working!')
 })
 
-app.listen(process.env.PORT, () => console.log(`server is running on http://localhost:${process.env.PORT}`))
+knex.raw('select 1+1 as result')
+  .then(() => {
+    console.log('connection to database established')
+
+    app.listen(process.env.PORT, () => console.log(`server is running on http://localhost:${process.env.PORT}`))
+  })
+  .catch(() => console.log('unable to establish connection to the database'))

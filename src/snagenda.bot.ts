@@ -1,4 +1,4 @@
-import { SlackResponse } from './types/slackRequest'
+import { SlackResponse } from './types/slackResponse'
 import axios from 'axios'
 
 const instance = axios.create({
@@ -16,4 +16,8 @@ export function sayHi(payload: SlackResponse) {
 
   instance.post('https://slack.com/api/chat.postMessage', { text: `hello <@${user}> <${user}>`, channel })
     .then((res) => console.log(res.data as SlackResponse))
+}
+
+export function handleAddAgendaItem(payload: SlackResponse) {
+  
 }

@@ -1,12 +1,6 @@
-import { SlackResponse } from './types/slackResponse'
-import axios from 'axios'
-// import knex from './db/knex'
-
-const instance = axios.create({
-  headers: {
-    Authorization: `Bearer ${process.env.SLACK_BOT_AUTH}`,
-  },
-})
+import { SlackResponse } from './types/slackResponse.types'
+import slack from './utils/slack.api'
+import todos from './db/queries/todos'
 
 export function handleAgendaBot(payload: SlackResponse) {
   if (payload.event.type !== 'app_mention') return
@@ -17,26 +11,27 @@ export function handleAgendaBot(payload: SlackResponse) {
   if (text.includes('add-item')) handleAddAgendaItem(payload)
 }
 
-// export function sayHi(payload: SlackResponse) {
-//   console.log(payload)
-
-//   const { user, channel } = payload.event
-
-//   if (payload.event.type !== 'app_mention') return
-
-//   instance.post('https://slack.com/api/chat.postMessage', { text: `hello <@${user}> <${user}>`, channel })
-//     .then((res) => console.log(res.data as SlackResponse))
-// }
-
 function handleAddAgendaItem(payload: SlackResponse) {
-  const { user } = payload.event
-  console.log(payload)
+  const { user, channel, text } = payload.event
 
-  // const agendaItem = text.split('add-item')[0].trim()
-  instance
-    .get('https://slack.com/api/users.info', {
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      params: { user, token: process.env.SLACK_API_TOKEN },
+  const agendaItem = text.split('add-item')[0].trim()
+
+  Promise.all([
+    slack.users.info(user),
+    slack.channels.info(channel)
+  ])
+    .then(([ { data: userRes }, { data: channelRes } ]) => {
+      if (!userRes.ok || !channelRes.ok) throw new Error('unable to retrieve user or channel')
+
+      return todos.create({
+        userId: userRes.user.id,
+        username: userRes.user.name,
+        channelId: channelRes.channel.id,
+        channelName: channelRes.channel.name,
+        text: agendaItem
+      })
     })
-    .then((res) => console.log(res.data))
+    .then(([ success ]) => {
+      if (!success) throw new Error('unable to add item to database')
+    })
 }

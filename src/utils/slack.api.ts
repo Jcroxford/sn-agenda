@@ -1,26 +1,29 @@
 import axios from 'axios'
 
-const instance = axios.create({
-  headers: {
-    Authorization: `Bearer ${process.env.SLACK_BOT_AUTH}`,
-  },
-})
-// =====================================================================================================================
-// interfacaces
-// =====================================================================================================================
-interface HttpHeaders {
-  Authorization: string
-  'Content-Type'?: string
-}
+// types
+import { HttpHeaders } from './../types/axios.types'
+import { UserInfo } from '../types/slackResponse.types'
+
 function http(json: boolean = true) {
   const headers: HttpHeaders = {
     Authorization: `Bearer ${process.env.SLACK_BOT_AUTH}`,
   }
 
-  if(!json) headers['Content-Type'] = 'application/x-www-form-urlencoded'
+  if (!json) headers['Content-Type'] = 'application/x-www-form-urlencoded'
   return axios.create({
     headers: {
       Authorization: `Bearer ${process.env.SLACK_BOT_AUTH}`,
     },
   })
+}
+
+export default {
+  users: {
+    info(user: string): Promise<{ data: UserInfo }> {
+      return http(/* json */ false)
+        .get('https://slack.com/api/users.info', {
+          params: { user, token: process.env.SLACK_API_TOKEN }
+        })
+    }
+  }
 }

@@ -1,6 +1,6 @@
 import { SlackResponse } from './types/slackResponse.types'
 import slack from './utils/slack.api'
-import todos from './db/queries/todos'
+import Todos from './db/queries/todos'
 
 export function handleAgendaBot(payload: SlackResponse) {
   if (payload.event.type !== 'app_mention') return
@@ -9,6 +9,7 @@ export function handleAgendaBot(payload: SlackResponse) {
   if (payload.event.type !== 'app_mention') return
 
   if (text.includes('add-item')) handleAddAgendaItem(payload)
+  if (text.includes('list-items')) handleListAgendaItemsForChannel(payload)
 }
 
 function handleAddAgendaItem(payload: SlackResponse) {
@@ -23,7 +24,7 @@ function handleAddAgendaItem(payload: SlackResponse) {
     .then(([ { data: userRes }, { data: channelRes } ]) => {
       if (!userRes.ok || !channelRes.ok) throw new Error('unable to retrieve user or channel')
 
-      return todos.create({
+      return Todos.create({
         userId: userRes.user.id,
         username: userRes.user.name,
         channelId: channelRes.channel.id,
@@ -37,4 +38,23 @@ function handleAddAgendaItem(payload: SlackResponse) {
       const message = `ok! Added the todo item \`${agendaItem}\` to this group's todo list.`
       slack.chat.postMessage(message, channel)
     })
+}
+
+function handleListAgendaItemsForChannel(payload: SlackResponse) {
+  const { channel } = payload.event
+
+  Todos.list({ channel_id: channel, deleted: false, completed: false })
+    .then((todos) => {
+      const snLogoColors = [ '#4f75mb', '#e87722', '#9dd7d4', '#a9da5f', '#31793d' ]
+
+      const attachments = todos.map((todo, i) => {
+        return {
+          color: snLogoColors[i % snLogoColors.length],
+          text: `${i + 1} ${todo.text} (id ${todo.id})`,
+        }
+      })
+
+      slack.chat.postMessage(`Here's a list of all current items on the agenda for this group`, channel, attachments)
+    })
+
 }

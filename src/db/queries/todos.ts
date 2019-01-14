@@ -1,5 +1,7 @@
 import knex from '../knex'
 
+import { Todo, WhereTodo } from './../../types/todo.types'
+
 interface CreateTodo {
   userId: string
   username: string
@@ -16,5 +18,9 @@ export default {
       username: todo.username,
       text: todo.text
     })
+  },
+
+  list(searchTerms: WhereTodo = {}): Promise<Todo[]> {
+    return knex('todos').where(searchTerms)
   }
 }

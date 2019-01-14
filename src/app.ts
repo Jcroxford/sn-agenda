@@ -10,7 +10,7 @@ knex.raw('select 1+1 as result').then(console.log).catch(console.log)
 
 import * as slackApi from './snagenda.bot'
 
-import { SlackResponse } from './types/slackResponse'
+import { SlackResponse } from './types/slackResponse.types'
 
 const app = express()
 

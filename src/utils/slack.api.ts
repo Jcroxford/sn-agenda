@@ -2,7 +2,7 @@ import axios from 'axios'
 
 // types
 import { HttpHeaders } from './../types/axios.types'
-import { UserInfo, ChannelInfo } from '../types/slackResponse.types'
+import { UserInfo, ChannelInfo, Attachment } from '../types/slackResponse.types'
 
 function http(json: boolean = true) {
   const headers: HttpHeaders = {
@@ -37,7 +37,7 @@ export default {
   },
   chat: {
     // todo create attachment type from slack docs on expected response https://api.slack.com/methods/chat.postMessage
-    postMessage(text: string, channel: string,  attachments: any[] = []) {
+    postMessage(text: string, channel: string,  attachments: Attachment[] = []) {
       return http().post('/chat.postMessage', { text, attachments, channel }).then(console.log)
     }
   }

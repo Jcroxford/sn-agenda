@@ -50,7 +50,10 @@ function handleListAgendaItemsForChannel(payload: SlackResponse) {
 
   Todos.list({ channel_id: channel, deleted: false, completed: false })
     .then((todos) => {
-      const snLogoColors = [ '#e87722', '#9dd7d4','#4f75mb', '#a9da5f', '#31793d' ]
+      if (!todos.length) {
+        return slack.chat.postMessage(`It looks like this channel doesn't currently have any items! :blush:`, channel)
+      }
+      const snLogoColors = [ '#e87722', '#9dd7d4', '#4f75mb', '#a9da5f', '#31793d' ]
 
       const attachments = todos.map((todo, i) => {
         return {
@@ -59,7 +62,8 @@ function handleListAgendaItemsForChannel(payload: SlackResponse) {
         }
       })
 
-      slack.chat.postMessage(`Here's a list of all current items on the agenda for this group`, channel, attachments)
+      return slack.chat
+        .postMessage(`Here's a list of all current items on the agenda for this group`, channel, attachments)
     })
 }
 

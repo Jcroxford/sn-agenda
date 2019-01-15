@@ -8,12 +8,12 @@ export function handleAgendaBot(payload: SlackResponse) {
   const { text } = payload.event
   if (payload.event.type !== 'app_mention') return
 
-  if (text.includes('add-item')) handleAddAgendaItem(payload)
-  if (text.includes('list-items')) handleListAgendaItemsForChannel(payload)
-  if (text.includes('repo') || text.includes('github')) handleDisplayRepo(payload)
-  if (text.includes('remove-item')) handleRemoveItemForChannel(payload)
+  if (text.includes('add-item')) return handleAddAgendaItem(payload)
+  if (text.includes('list-items')) return handleListAgendaItemsForChannel(payload)
+  if (text.includes('repo') || text.includes('github')) return handleDisplayRepo(payload)
+  if (text.includes('remove-item')) return handleRemoveItemForChannel(payload)
   if (text.includes('reset-agenda') || text.includes('clean-slate') || text.includes('reset')) {
-    handleResetAgendaForChannel(payload)
+    return handleResetAgendaForChannel(payload)
   }
 }
 

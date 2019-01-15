@@ -1,6 +1,8 @@
-import { SlackResponse } from './types/slackResponse.types'
+import { SlackResponse, Attachment } from './types/slackResponse.types'
 import slack from './utils/slack.api'
 import Todos from './db/queries/todos'
+
+const SN_LOGO_COLORS = [ '#e87722', '#9dd7d4', '#4f75mb', '#a9da5f', '#31793d' ]
 
 export function handleAgendaBot(payload: SlackResponse) {
   if (payload.event.type !== 'app_mention') return
@@ -12,6 +14,7 @@ export function handleAgendaBot(payload: SlackResponse) {
   if (text.includes('list-items')) return handleListAgendaItemsForChannel(payload)
   if (text.includes('repo') || text.includes('github')) return handleDisplayRepo(payload)
   if (text.includes('remove-item')) return handleRemoveItemForChannel(payload)
+  if (text.includes('help')) return handleShowBotInstructions(payload)
   if (text.includes('reset-agenda') || text.includes('clean-slate') || text.includes('reset')) {
     return handleResetAgendaForChannel(payload)
   }
@@ -53,11 +56,10 @@ function handleListAgendaItemsForChannel(payload: SlackResponse) {
       if (!todos.length) {
         return slack.chat.postMessage(`It looks like this channel doesn't currently have any items! :blush:`, channel)
       }
-      const snLogoColors = [ '#e87722', '#9dd7d4', '#4f75mb', '#a9da5f', '#31793d' ]
 
       const attachments = todos.map((todo, i) => {
         return {
-          color: snLogoColors[i % snLogoColors.length],
+          color: SN_LOGO_COLORS[i % SN_LOGO_COLORS.length],
           text: `${i + 1} ${todo.text} (id ${todo.id})`,
         }
       })
@@ -91,4 +93,44 @@ function handleRemoveItemForChannel(payload: SlackResponse) {
     .then(() => {
       slack.chat.postMessage(`Got it! Item has been archived.`, channel)
     })
+}
+
+function handleShowBotInstructions(payload: SlackResponse) {
+  const { channel, user } = payload.event
+
+  const attachments: Attachment[] = [
+    {
+      color: SN_LOGO_COLORS[0 % SN_LOGO_COLORS.length],
+      title: 'list-items',
+      text: `lists all currently active agenda items for your group.`,
+    },
+    {
+      color: SN_LOGO_COLORS[1 % SN_LOGO_COLORS.length],
+      title: 'add-item <item you wish to add to the agenda>',
+      text: `adds item to the current agenda for the group.`,
+    },
+    {
+      color: SN_LOGO_COLORS[2 % SN_LOGO_COLORS.length],
+      title: 'remove-item <id>',
+      text: `Provided the item id, I will carry out your wishes and archive the item.`,
+    },
+    {
+      color: SN_LOGO_COLORS[3 % SN_LOGO_COLORS.length],
+      title: 'reset-agenda OR clean-slate OR reset',
+      /* tslint:disable-next-line */
+      text: `This is the danger zone but useful. Archives all currently active items in the agenda list. This should be used after a meeting so you can start over keeping track for the next one`,
+    },
+    {
+      color: SN_LOGO_COLORS[4 % SN_LOGO_COLORS.length],
+      title: 'repo OR github',
+      text: `If you ever wish to visit me in my humble home.`,
+    },
+    {
+      color: SN_LOGO_COLORS[5 % SN_LOGO_COLORS.length],
+      title: 'help',
+      text: `Show all this information again... You know... For fun...`,
+    }
+  ]
+
+  slack.chat.postEphemeral('All commands require you to @ me so I know what to look for.', channel, user, attachments)
 }

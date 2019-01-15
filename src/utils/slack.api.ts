@@ -40,7 +40,7 @@ export default {
       return http().post('/chat.postMessage', { text, attachments, channel })
     },
     postEphemeral(text: string, channel: string, user: string, attachments: Attachment[] = []) {
-      return http().post('/chat.postEphemeral', { text, attachments, channel, user }).then(console.log)
+      return http().post('/chat.postEphemeral', { text, attachments, channel, user })
     }
   }
 }

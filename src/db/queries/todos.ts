@@ -28,5 +28,11 @@ export default {
     return knex('todos')
       .update({ completed: true })
       .where({ channel_id: channelId, completed: false })
+  },
+
+  remove(id: string) {
+    return knex('todos')
+      .update({ completed: true, deleted: true })
+      .where({ id })
   }
 }

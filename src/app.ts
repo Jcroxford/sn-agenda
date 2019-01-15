@@ -3,7 +3,6 @@ require('dotenv').config()
 import express from 'express'
 import logger from 'morgan'
 import bodyParser from 'body-parser'
-import fs from 'fs'
 
 import knex from './db/knex'
 
@@ -24,11 +23,6 @@ app.post('/', (req, res) => {
   slackApi.handleAgendaBot(body)
 
   res.sendStatus(200)
-})
-
-app.post('/sn-agenda', (req, res) => {
-  fs.writeFileSync('res.json', JSON.stringify(req.body, null, 2))
-  res.send('its working!')
 })
 
 knex.raw('select 1+1 as result')

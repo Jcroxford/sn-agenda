@@ -37,7 +37,7 @@ export default {
   },
   chat: {
     postMessage(text: string, channel: string,  attachments: Attachment[] = []) {
-      return http().post('/chat.postMessage', { text, attachments, channel }).then(console.log)
+      return http().post('/chat.postMessage', { text, attachments, channel })
     }
   }
 }

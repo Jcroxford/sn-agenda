@@ -50,7 +50,7 @@ function handleListAgendaItemsForChannel(payload: SlackResponse) {
 
   Todos.list({ channel_id: channel, deleted: false, completed: false })
     .then((todos) => {
-      const snLogoColors = [ '#4f75mb', '#e87722', '#9dd7d4', '#a9da5f', '#31793d' ]
+      const snLogoColors = [ '#e87722', '#9dd7d4','#4f75mb', '#a9da5f', '#31793d' ]
 
       const attachments = todos.map((todo, i) => {
         return {

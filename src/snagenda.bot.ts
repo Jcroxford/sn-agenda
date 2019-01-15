@@ -10,6 +10,11 @@ export function handleAgendaBot(payload: SlackResponse) {
 
   if (text.includes('add-item')) handleAddAgendaItem(payload)
   if (text.includes('list-items')) handleListAgendaItemsForChannel(payload)
+  if (
+    text.includes('reset-agenda') ||
+    text.includes('clean-slate') ||
+    text.includes('reset')
+  ) handleResetAgendaForChannel(payload)
 }
 
 function handleAddAgendaItem(payload: SlackResponse) {
@@ -58,4 +63,11 @@ function handleListAgendaItemsForChannel(payload: SlackResponse) {
     })
 }
 
+function handleResetAgendaForChannel(payload: SlackResponse) {
+  const { channel } = payload.event
+
+  Todos.archiveChannelTodos(channel)
+    .then(() => {
+      slack.chat.postMessage(`:+1: I archived all active items for this channel.`, channel)
+    })
 }

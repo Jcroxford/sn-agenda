@@ -22,5 +22,11 @@ export default {
 
   list(searchTerms: WhereTodo = {}): Promise<Todo[]> {
     return knex('todos').where(searchTerms)
+  },
+
+  archiveChannelTodos(channelId: string): Promise<any> {
+    return knex('todos')
+      .update({ completed: true })
+      .where({ channel_id: channelId, completed: false })
   }
 }

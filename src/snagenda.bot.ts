@@ -10,11 +10,10 @@ export function handleAgendaBot(payload: SlackResponse) {
 
   if (text.includes('add-item')) handleAddAgendaItem(payload)
   if (text.includes('list-items')) handleListAgendaItemsForChannel(payload)
-  if (
-    text.includes('reset-agenda') ||
-    text.includes('clean-slate') ||
-    text.includes('reset')
-  ) handleResetAgendaForChannel(payload)
+  if (text.includes('repo') || text.includes('github')) handleDisplayRepo(payload)
+  if (text.includes('reset-agenda') || text.includes('clean-slate') || text.includes('reset')) {
+    handleResetAgendaForChannel(payload)
+  }
 }
 
 function handleAddAgendaItem(payload: SlackResponse) {
@@ -74,4 +73,10 @@ function handleResetAgendaForChannel(payload: SlackResponse) {
     .then(() => {
       slack.chat.postMessage(`:+1: I archived all active items for this channel.`, channel)
     })
+}
+
+function handleDisplayRepo(payload: SlackResponse) {
+  const { channel } = payload.event
+
+  slack.chat.postMessage(`The way to my :heart: is https://github.com/Jcroxford/sn-agenda`, channel)
 }

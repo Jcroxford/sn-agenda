@@ -56,5 +56,6 @@ function handleListAgendaItemsForChannel(payload: SlackResponse) {
 
       slack.chat.postMessage(`Here's a list of all current items on the agenda for this group`, channel, attachments)
     })
+}
 
 }

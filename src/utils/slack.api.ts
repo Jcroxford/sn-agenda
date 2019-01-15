@@ -36,7 +36,6 @@ export default {
     }
   },
   chat: {
-    // todo create attachment type from slack docs on expected response https://api.slack.com/methods/chat.postMessage
     postMessage(text: string, channel: string,  attachments: Attachment[] = []) {
       return http().post('/chat.postMessage', { text, attachments, channel }).then(console.log)
     }
